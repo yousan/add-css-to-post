@@ -14,9 +14,16 @@ function add_css_to_post_custom_css_input() {
     echo '<textarea name="custom_css" id="custom_css" rows="5" cols="30" style="width:100%;">'.get_post_meta($post->ID,'_custom_css',true).'</textarea>';
 }
 
-function add_css_to_post_custom_css_hooks() {
-    add_meta_box('custom_css', 'add CSS', 'add_css_to_post_custom_css_input', 'post', 'normal', 'high');
-    add_meta_box('custom_css', 'add CSS', 'add_css_to_post_custom_css_input', 'page', 'normal', 'high');
+function add_css_to_post_custom_css_hooks()
+{
+    $post_types = get_post_types('', 'names');
+    unset($post_types['attachment']);
+    unset($post_types['revision']);
+    unset($post_types['nav_menu_item']);
+
+    foreach ($post_types as $post_type) {
+        add_meta_box('custom_css', 'add CSS', 'add_css_to_post_custom_css_input', $post_type, 'normal', 'high');
+    }
 }
 
 function add_css_to_post_save_custom_css($post_id) {
